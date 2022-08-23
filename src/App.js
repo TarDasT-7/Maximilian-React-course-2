@@ -1,8 +1,12 @@
 import React from "react";
 
+import AddUser from "./components/Users/add-user/AddUser";
+
 const App =()=> {
   return (
-    <div></div>
+    <div>
+      <AddUser />
+    </div>
   );
 }
 
