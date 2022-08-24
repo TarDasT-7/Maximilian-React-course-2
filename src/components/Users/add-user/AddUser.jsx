@@ -1,19 +1,26 @@
-import React , {useState} from "react";
+import React , {useState , useRef} from "react";
 import styles from './AddUser.module.scss';
 
 import Card from "../../UI/card/Card";
 import Button from "../../UI/button/Button";
 import ErrorModal from "../../UI/error/ErrorModal";
+import Wrapper from "../../helpers/wrapper/Wrapper";
 
 const AddUser = props => {
 
-    const [username , setUsername] = useState('');
-    const [age , setAge] = useState('');
+    const nameInputRef = useRef();
+    const ageInputRef = useRef();
+
+
     const [error , setError] = useState();
 
 
     const submitHandler = (event) => {
         event.preventDefault();
+
+        const username = nameInputRef.current.value;
+        const age = ageInputRef.current.value;
+        
 
         if(username.trim().length === 0 || age.trim().length === 0){
             setError(
@@ -35,48 +42,33 @@ const AddUser = props => {
             return;
         }
 
-        console.log(username , age);
         props.onAddUser(username , age);
-        setUsername('');
-        setAge('');
-    }
-
-    const changeHandler = (event) =>{
-
-        switch (event.target.id) {
-            case 'username':
-                setUsername(event.target.value);
-                break;
-
-            case 'age':
-                setAge(event.target.value);
-                break;                
-        }
+        nameInputRef.current.value = '';
+        ageInputRef.current.value  = '';
     }
 
     const errorHandler = ()=> {setError(null);}
 
     return(
-        <div>
+        <Wrapper>
             { error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} /> }
             
-
             <Card className={styles.input}>
 
                 <form onSubmit={submitHandler}>
 
                     <label htmlFor="username">Username</label>
-                    <input id="username" value={username} type="text" onChange={changeHandler} autoComplete="off" />
+                    <input id="username" type="text" ref={nameInputRef} autoComplete="off" />
 
                     <label htmlFor="age">Age (Years)</label>
-                    <input id="age" value={age} type="number" onChange={changeHandler} autoComplete="off" />
+                    <input id="age" type="number" ref={ageInputRef} autoComplete="off" />
 
                     <Button type="submit">Add User</Button>
 
                 </form>
 
             </Card>
-        </div>
+        </Wrapper>
 
     );
 
